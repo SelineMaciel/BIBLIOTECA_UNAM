@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block titulo %}Nuevo Administrador{% endblock %}
+{% block contenido %}
+<h2 class="mb-4">Crear Administrador</h2>
+<div class="card p-4">
+    <form method="POST" novalidate>
+        {{ formulario.hidden_tag() }}
+        <div class="row g-3">
+            <div class="col-md-6">
+                {{ formulario.nombre.label(class="form-label") }}
+                {{ formulario.nombre(class="form-control" + (" is-invalid" if formulario.nombre.errors else "")) }}
+                {% for error in formulario.nombre.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+                {{ formulario.email.label(class="form-label") }}
+                {{ formulario.email(class="form-control" + (" is-invalid" if formulario.email.errors else "")) }}
+                {% for error in formulario.email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-4">
+                {{ formulario.phone.label(class="form-label") }}
+                {{ formulario.phone(class="form-control") }}
+            </div>
+            <div class="col-md-4">
+                {{ formulario.admin_user.label(class="form-label") }}
+                {{ formulario.admin_user(class="form-control" + (" is-invalid" if formulario.admin_user.errors else "")) }}
+                {% for error in formulario.admin_user.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-4">
+                {{ formulario.password.label(class="form-label") }}
+                {{ formulario.password(class="form-control" + (" is-invalid" if formulario.password.errors else "")) }}
+                {% for error in formulario.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+                {{ formulario.id_rol.label(class="form-label") }}
+                {{ formulario.id_rol(class="form-select") }}
+            </div>
+        </div>
+        <div class="mt-4">
+            {{ formulario.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('admins.listar') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

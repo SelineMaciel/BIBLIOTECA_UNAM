@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}Inventario{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Inventario por Sucursal</h2>
+    <a href="{{ url_for('inventario.crear') }}" class="btn btn-success">+ Nuevo registro</a>
+</div>
+
+<div class="alert alert-info">
+    Aquí se relaciona cada libro con la cantidad de copias disponibles en
+    cada sucursal. Un libro necesita un registro de inventario con
+    "disponible &gt; 0" en una sucursal para poder ser prestado desde ella.
+</div>
+
+<table class="table table-striped bg-white">
+    <thead>
+        <tr><th>Libro</th><th>Sucursal</th><th>Disponibles</th><th>Total</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.libro.titulo }} ({{ item.libro.isbn }})</td>
+            <td>{{ item.sucursal.nombre }}</td>
+            <td>
+                <span class="badge bg-{{ 'success' if item.cantidad_disponible > 0 else 'secondary' }}">
+                    {{ item.cantidad_disponible }}
+                </span>
+            </td>
+            <td>{{ item.cantidad_total }}</td>
+            <td>
+                <a href="{{ url_for('inventario.editar', id_inventario=item.id_inventario) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                <form method="POST" action="{{ url_for('inventario.eliminar', id_inventario=item.id_inventario) }}" class="d-inline"
+                      onsubmit="return confirm('¿Eliminar este registro de inventario?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted">No hay registros de inventario todavía.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

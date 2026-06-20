@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block titulo %}Catálogo de Libros{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Catálogo de Libros</h2>
+    {% if session.get('tipo_sesion') == 'admin' %}
+        <a href="{{ url_for('libros.crear') }}" class="btn btn-success">+ Nuevo libro</a>
+    {% endif %}
+</div>
+
+<form method="GET" class="card p-3 mb-4">
+    <div class="row g-2">
+        <div class="col-md-5">
+            {{ formulario_busqueda.texto(class="form-control", placeholder="Buscar por título...") }}
+        </div>
+        <div class="col-md-4">
+            {{ formulario_busqueda.id_categoria(class="form-select") }}
+        </div>
+        <div class="col-md-2">
+            {{ formulario_busqueda.solo_disponibles(class="form-select") }}
+        </div>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped bg-white">
+    <thead>
+        <tr>
+            <th>ISBN</th><th>Título</th><th>Autor</th><th>Categoría</th><th>Estado</th>
+            {% if session.get('tipo_sesion') == 'admin' %}<th>Acciones</th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for libro in libros %}
+        <tr>
+            <td>{{ libro.isbn }}</td>
+            <td>{{ libro.titulo }}</td>
+            <td>{{ libro.autor_principal }}</td>
+            <td>{{ libro.categoria.nombre_categoria }}</td>
+            <td>
+                <span class="badge bg-{{ 'success' if libro.esta_disponible() else 'secondary' }}">
+                    {{ libro.estado.nombre_estado }}
+                </span>
+            </td>
+            {% if session.get('tipo_sesion') == 'admin' %}
+            <td>
+                <a href="{{ url_for('libros.editar', isbn=libro.isbn) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                <form method="POST" action="{{ url_for('libros.eliminar', isbn=libro.isbn) }}" class="d-inline"
+                      onsubmit="return confirm('¿Eliminar este libro?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted">No se encontraron libros.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block titulo %}Iniciar sesión{% endblock %}
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card p-4 mt-4">
+            <h3 class="mb-3 text-center">Iniciar sesión</h3>
+            <form method="POST" novalidate>
+                {{ formulario.hidden_tag() }}
+                <div class="mb-3">
+                    {{ formulario.email.label(class="form-label") }}
+                    {{ formulario.email(class="form-control" + (" is-invalid" if formulario.email.errors else "")) }}
+                    {% for error in formulario.email.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="mb-3">
+                    {{ formulario.password.label(class="form-label") }}
+                    {{ formulario.password(class="form-control") }}
+                    <div class="form-text">Déjalo vacío si eres Usuario o Empleado.</div>
+                </div>
+                {{ formulario.submit(class="btn btn-primary w-100") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block titulo %}{{ accion }} Libro{% endblock %}
+{% block contenido %}
+<h2 class="mb-4">{{ accion }} Libro</h2>
+<div class="card p-4">
+    <form method="POST" novalidate>
+        {{ formulario.hidden_tag() }}
+        <div class="row g-3">
+            <div class="col-md-4">
+                {{ formulario.isbn.label(class="form-label") }}
+                {{ formulario.isbn(class="form-control" + (" is-invalid" if formulario.isbn.errors else "")) }}
+                {% for error in formulario.isbn.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-8">
+                {{ formulario.titulo.label(class="form-label") }}
+                {{ formulario.titulo(class="form-control" + (" is-invalid" if formulario.titulo.errors else "")) }}
+                {% for error in formulario.titulo.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+                {{ formulario.autor.label(class="form-label") }}
+                {{ formulario.autor(class="form-control" + (" is-invalid" if formulario.autor.errors else "")) }}
+                {% for error in formulario.autor.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+                {{ formulario.editorial.label(class="form-label") }}
+                {{ formulario.editorial(class="form-control") }}
+            </div>
+            <div class="col-md-4">
+                {{ formulario.anio_publicacion.label(class="form-label") }}
+                {{ formulario.anio_publicacion(class="form-control" + (" is-invalid" if formulario.anio_publicacion.errors else "")) }}
+                {% for error in formulario.anio_publicacion.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-4">
+                {{ formulario.id_categoria.label(class="form-label") }}
+                {{ formulario.id_categoria(class="form-select") }}
+            </div>
+            <div class="col-md-4">
+                {{ formulario.id_estado.label(class="form-label") }}
+                {{ formulario.id_estado(class="form-select") }}
+            </div>
+        </div>
+        <div class="mt-4">
+            {{ formulario.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('libros.listar') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

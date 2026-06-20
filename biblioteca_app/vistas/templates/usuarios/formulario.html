@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}{{ accion }} Usuario{% endblock %}
+{% block contenido %}
+<h2 class="mb-4">{{ accion }} Usuario</h2>
+<div class="card p-4">
+    <form method="POST" novalidate>
+        {{ formulario.hidden_tag() }}
+        <div class="row g-3">
+            <div class="col-md-6">
+                {{ formulario.nombre.label(class="form-label") }}
+                {{ formulario.nombre(class="form-control" + (" is-invalid" if formulario.nombre.errors else "")) }}
+                {% for error in formulario.nombre.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+                {{ formulario.email.label(class="form-label") }}
+                {{ formulario.email(class="form-control" + (" is-invalid" if formulario.email.errors else "")) }}
+                {% for error in formulario.email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-4">
+                {{ formulario.phone.label(class="form-label") }}
+                {{ formulario.phone(class="form-control") }}
+            </div>
+            <div class="col-md-4">
+                {{ formulario.edad.label(class="form-label") }}
+                {{ formulario.edad(class="form-control" + (" is-invalid" if formulario.edad.errors else "")) }}
+                {% for error in formulario.edad.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-4">
+                {{ formulario.id_membresia.label(class="form-label") }}
+                {{ formulario.id_membresia(class="form-select") }}
+            </div>
+            <div class="col-md-6">
+                {{ formulario.id_rol.label(class="form-label") }}
+                {{ formulario.id_rol(class="form-select") }}
+            </div>
+        </div>
+        <div class="mt-4">
+            {{ formulario.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('usuarios.listar') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

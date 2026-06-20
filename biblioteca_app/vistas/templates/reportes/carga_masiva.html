@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block titulo %}Carga Masiva de Libros{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Carga Masiva de Libros</h2>
+    <a href="{{ url_for('reportes.descargar_plantilla') }}" class="btn btn-outline-secondary">
+        ⬇ Descargar plantilla Excel
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h5 class="mb-3">Subir archivo</h5>
+            <div class="alert alert-info small">
+                El archivo debe tener las columnas: <strong>ISBN, titulo, autor</strong> (obligatorias)
+                y opcionalmente: <strong>editorial, anio_publicacion</strong>.
+                Descarga la plantilla de arriba para tener el formato correcto.
+            </div>
+            <form method="POST" enctype="multipart/form-data" novalidate>
+                {{ formulario.hidden_tag() }}
+                <div class="mb-3">
+                    {{ formulario.archivo.label(class="form-label") }}
+                    {{ formulario.archivo(class="form-control" + (" is-invalid" if formulario.archivo.errors else "")) }}
+                    {% for error in formulario.archivo.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    {{ formulario.id_categoria.label(class="form-label") }}
+                    {{ formulario.id_categoria(class="form-select") }}
+                    <div class="form-text">Todos los libros del archivo recibirán esta categoría.</div>
+                </div>
+                <div class="mb-3">
+                    {{ formulario.id_estado.label(class="form-label") }}
+                    {{ formulario.id_estado(class="form-select") }}
+                </div>
+                {{ formulario.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('reportes.dashboard') }}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+
+    {% if resultado %}
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h5 class="mb-3">Resultado de la importación</h5>
+            <ul class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between">
+                    Filas leídas del archivo <strong>{{ resultado.total_leidos }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between text-success">
+                    Libros insertados correctamente <strong>{{ resultado.libros_insertados }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between {{ 'text-danger' if resultado.total_errores > 0 else '' }}">
+                    Filas con errores <strong>{{ resultado.total_errores }}</strong>
+                </li>
+            </ul>
+
+            {% if resultado.errores %}
+            <h6 class="text-danger">Errores de validación en el archivo:</h6>
+            <ul class="small">
+                {% for error in resultado.errores %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if resultado.errores_db %}
+            <h6 class="text-danger mt-2">Errores al insertar en la base de datos:</h6>
+            <ul class="small">
+                {% for error in resultado.errores_db %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

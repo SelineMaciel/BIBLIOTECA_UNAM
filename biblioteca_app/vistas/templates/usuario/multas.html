@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo %}Mis Multas{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Mis Multas Pendientes</h2>
+    <a href="{{ url_for('usuario.dashboard') }}" class="btn btn-outline-secondary">← Volver al panel</a>
+</div>
+
+{% if total > 0 %}
+<div class="alert alert-danger">
+    <strong>Deuda total pendiente: S/ {{ "%.2f"|format(total) }}</strong>
+    — Acércate a cualquier sucursal para regularizar tu situación.
+</div>
+{% else %}
+<div class="alert alert-success">No tienes multas pendientes. ¡Gracias por devolver a tiempo!</div>
+{% endif %}
+
+<table class="table table-striped bg-white">
+    <thead>
+        <tr>
+            <th>Libro</th>
+            <th>Préstamo</th>
+            <th>Fecha multa</th>
+            <th>Monto</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in multas %}
+        <tr>
+            <td>{{ m.titulo }}</td>
+            <td>#{{ m.id_prestamo }} — {{ m.fecha_prestamo }}</td>
+            <td>{{ m.fecha_multa }}</td>
+            <td><strong class="text-danger">S/ {{ "%.2f"|format(m.monto) }}</strong></td>
+            <td><span class="badge bg-warning text-dark">{{ m.estado_pago }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted">Sin multas pendientes.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block titulo %}Mi Panel{% endblock %}
+{% block contenido %}
+<h2 class="mb-4">Mi Panel</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <h6 class="text-muted">Préstamos activos</h6>
+            <h3>{{ prestamos_activos|length }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <h6 class="text-muted">Reservas vigentes</h6>
+            <h3>{{ reservas_vigentes|length }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center {{ 'border-danger' if total_multas > 0 else '' }}">
+            <h6 class="text-muted">Multas pendientes</h6>
+            <h3 class="{{ 'text-danger' if total_multas > 0 else '' }}">S/ {{ "%.2f"|format(total_multas) }}</h3>
+            {% if total_multas > 0 %}
+            <a href="{{ url_for('usuario.mis_multas') }}" class="btn btn-sm btn-outline-danger mt-1">Ver detalle</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<h4>Mis préstamos activos</h4>
+<table class="table table-striped bg-white">
+    <thead><tr><th>Libro</th><th>Fecha préstamo</th><th>Estado</th></tr></thead>
+    <tbody>
+        {% for p in prestamos_activos %}
+        <tr>
+            <td>{{ p.libro.titulo }}</td>
+            <td>{{ p.fecha_prestamo }}</td>
+            <td>{{ p.estado.descripcion }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-center text-muted">No tienes préstamos activos.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h4 class="mt-4">Mis reservas vigentes</h4>
+<table class="table table-striped bg-white">
+    <thead><tr><th>Libro</th><th>Fecha expiración</th><th>Estado</th></tr></thead>
+    <tbody>
+        {% for r in reservas_vigentes %}
+        <tr>
+            <td>{{ r.libro.titulo }}</td>
+            <td>{{ r.fecha_expiracion }}</td>
+            <td>{{ r.estado.descripcion }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-center text-muted">No tienes reservas vigentes.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

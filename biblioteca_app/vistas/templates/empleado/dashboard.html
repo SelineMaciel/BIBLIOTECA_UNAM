@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titulo %}Panel de Empleado{% endblock %}
+{% block contenido %}
+<h2 class="mb-4">Panel de Empleado</h2>
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <h5>Catálogo de libros</h5>
+            <a href="{{ url_for('libros.listar') }}" class="btn btn-outline-primary btn-sm">Ver</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <h5>Préstamos</h5>
+            <a href="{{ url_for('prestamos.listar') }}" class="btn btn-outline-primary btn-sm">Gestionar</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <h5>Reservas</h5>
+            <a href="{{ url_for('reservas.listar') }}" class="btn btn-outline-primary btn-sm">Gestionar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

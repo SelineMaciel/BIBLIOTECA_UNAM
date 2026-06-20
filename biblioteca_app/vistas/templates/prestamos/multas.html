@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block titulo %}Multas del Préstamo #{{ prestamo.id_prestamo }}{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Multas del Préstamo #{{ prestamo.id_prestamo }}</h2>
+    <a href="{{ url_for('prestamos.listar') }}" class="btn btn-outline-secondary">← Volver</a>
+</div>
+
+<div class="card p-3 mb-4">
+    <div class="row">
+        <div class="col-md-4"><strong>Usuario:</strong> {{ prestamo.usuario.nombre }}</div>
+        <div class="col-md-4"><strong>Libro:</strong> {{ prestamo.libro.titulo }}</div>
+        <div class="col-md-4"><strong>Estado:</strong>
+            <span class="badge bg-{{ 'success' if prestamo.estado.descripcion == 'Devuelto' else ('danger' if prestamo.estado.descripcion == 'Vencido' else 'warning') }}">
+                {{ prestamo.estado.descripcion }}
+            </span>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped bg-white">
+    <thead>
+        <tr><th>Fecha multa</th><th>Monto</th><th>Estado</th><th>Acción</th></tr>
+    </thead>
+    <tbody>
+        {% for m in multas %}
+        <tr>
+            <td>{{ m.fecha_multa }}</td>
+            <td><strong class="{{ 'text-danger' if m.esta_pendiente() else 'text-success' }}">
+                S/ {{ "%.2f"|format(m.monto) }}
+            </strong></td>
+            <td>
+                <span class="badge bg-{{ 'warning text-dark' if m.esta_pendiente() else 'success' }}">
+                    {{ m.estado_pago }}
+                </span>
+            </td>
+            <td>
+                {% if m.esta_pendiente() %}
+                <form method="POST" action="{{ url_for('prestamos.pagar_multa', id_multa=m.id_multa) }}"
+                      class="d-inline" onsubmit="return confirm('¿Marcar esta multa como pagada?');">
+                    <input type="hidden" name="id_prestamo" value="{{ prestamo.id_prestamo }}">
+                    <button type="submit" class="btn btn-sm btn-success">Marcar pagada</button>
+                </form>
+                {% else %}
+                <span class="text-muted small">Pagada</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-center text-muted">Este préstamo no tiene multas.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if multas %}
+<div class="text-end">
+    <strong>Total pendiente:
+        S/ {{ "%.2f"|format(prestamo.total_multas_pendientes()) }}
+    </strong>
+</div>
+{% endif %}
+{% endblock %}

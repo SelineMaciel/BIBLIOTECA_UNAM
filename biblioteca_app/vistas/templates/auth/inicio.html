@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block titulo %}Inicio - Biblioteca{% endblock %}
+{% block contenido %}
+<div class="text-center my-5">
+    <h1 class="display-5">Sistema de Gestión de Biblioteca</h1>
+    <p class="lead text-muted">Consulta el catálogo, gestiona préstamos, reservas y reportes.</p>
+    {% if not session.get('tipo_sesion') %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg mt-3">Iniciar sesión</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titulo %}Biblioteca{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f5f6f8; }
+        .navbar-brand { font-weight: 600; }
+        .card { border: none; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+        footer { color: #888; font-size: .85rem; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('auth.index') }}">📚 Biblioteca</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if session.get('tipo_sesion') == 'admin' %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}">Panel</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('usuarios.listar') }}">Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('empleados.listar') }}">Empleados</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('libros.listar') }}">Libros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario.listar') }}">Inventario</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('prestamos.listar') }}">Préstamos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('reservas.listar') }}">Reservas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('reportes.dashboard') }}">Reportes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('reportes.carga_masiva') }}">Carga masiva</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('admins.listar') }}">Administradores</a></li>
+                {% elif session.get('tipo_sesion') == 'empleado' %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('empleado.dashboard') }}">Panel</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('libros.listar') }}">Libros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('inventario.listar') }}">Inventario</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('prestamos.listar') }}">Préstamos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('reservas.listar') }}">Reservas</a></li>
+                {% elif session.get('tipo_sesion') == 'usuario' %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('usuario.dashboard') }}">Panel</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('libros.listar') }}">Catálogo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('usuario.mis_multas') }}">Mis multas</a></li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav">
+                {% if session.get('tipo_sesion') %}
+                    <li class="nav-item"><span class="navbar-text text-light me-3">{{ session.get('nombre_sesion') }}</span></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Iniciar sesión</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+        {% if mensajes %}
+            {% for categoria, mensaje in mensajes %}
+                <div class="alert alert-{{ 'danger' if categoria == 'danger' else categoria }} alert-dismissible fade show" role="alert">
+                    {{ mensaje }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% block contenido %}{% endblock %}
+</div>
+
+<div class="container mt-5 mb-3 text-center">
+    <footer>Sistema de Biblioteca &mdash; Proyecto académico (POO + Flask)</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

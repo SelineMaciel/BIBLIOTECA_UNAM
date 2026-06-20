@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}Préstamos{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Préstamos</h2>
+    <a href="{{ url_for('prestamos.crear') }}" class="btn btn-success">+ Nuevo préstamo</a>
+</div>
+<table class="table table-striped bg-white">
+    <thead>
+        <tr><th>Usuario</th><th>Libro</th><th>Fecha préstamo</th><th>Fecha devolución</th><th>Estado</th><th>Multas pendientes</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+        {% for p in prestamos %}
+        <tr>
+            <td>{{ p.usuario.nombre }}</td>
+            <td>{{ p.libro.titulo }}</td>
+            <td>{{ p.fecha_prestamo }}</td>
+            <td>{{ p.fecha_devolucion or "-" }}</td>
+            <td>
+                <span class="badge bg-{{ 'success' if p.estado.descripcion == 'Devuelto' else ('danger' if p.estado.descripcion == 'Vencido' else 'warning') }}">
+                    {{ p.estado.descripcion }}
+                </span>
+            </td>
+            <td>
+                {% if p.total_multas_pendientes() > 0 %}
+                <span class="text-danger fw-bold">S/ {{ "%.2f"|format(p.total_multas_pendientes()) }}</span>
+                <a href="{{ url_for('prestamos.multas_prestamo', id_prestamo=p.id_prestamo) }}" class="btn btn-sm btn-outline-danger ms-1">Ver</a>
+                {% else %}
+                <span class="text-muted">S/ 0.00</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if not p.fue_devuelto() %}
+                <form method="POST" action="{{ url_for('prestamos.devolver', id_prestamo=p.id_prestamo) }}" class="d-inline"
+                      onsubmit="return confirm('¿Registrar la devolución de este préstamo?');">
+                    <button type="submit" class="btn btn-sm btn-outline-success">Registrar devolución</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted">No hay préstamos registrados.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

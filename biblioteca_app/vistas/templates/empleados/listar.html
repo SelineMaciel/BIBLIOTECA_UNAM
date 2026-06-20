@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}Empleados{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Empleados</h2>
+    <a href="{{ url_for('empleados.crear') }}" class="btn btn-success">+ Nuevo empleado</a>
+</div>
+<table class="table table-striped bg-white">
+    <thead><tr><th>Nombre</th><th>Email</th><th>Cargo</th><th>Sucursal</th><th>Acciones</th></tr></thead>
+    <tbody>
+        {% for empleado in empleados %}
+        <tr>
+            <td>{{ empleado.nombre }}</td>
+            <td>{{ empleado.email }}</td>
+            <td>{{ empleado.cargo }}</td>
+            <td>{{ empleado.sucursal.nombre }}</td>
+            <td>
+                <a href="{{ url_for('empleados.editar', id_empleado=empleado.id_empleado) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                <form method="POST" action="{{ url_for('empleados.eliminar', id_empleado=empleado.id_empleado) }}" class="d-inline"
+                      onsubmit="return confirm('¿Eliminar este empleado?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted">No hay empleados registrados.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

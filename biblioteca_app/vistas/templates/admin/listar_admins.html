@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block titulo %}Administradores{% endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Administradores</h2>
+    <a href="{{ url_for('admins.crear') }}" class="btn btn-success">+ Nuevo administrador</a>
+</div>
+<table class="table table-striped bg-white">
+    <thead><tr><th>Nombre</th><th>Usuario admin</th><th>Acciones</th></tr></thead>
+    <tbody>
+        {% for admin in admins %}
+        <tr>
+            <td>{{ admin.nombre }}</td>
+            <td>{{ admin.admin_user }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admins.eliminar', id_admin=admin.id_admin) }}" class="d-inline"
+                      onsubmit="return confirm('¿Eliminar este administrador?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-center text-muted">No hay administradores registrados.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}Panel de Administrador{% endblock %}
+{% block contenido %}
+<h2 class="mb-4">Panel de Administrador</h2>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <h5>Usuarios</h5>
+            <a href="{{ url_for('usuarios.listar') }}" class="btn btn-outline-primary btn-sm">Gestionar</a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <h5>Empleados</h5>
+            <a href="{{ url_for('empleados.listar') }}" class="btn btn-outline-primary btn-sm">Gestionar</a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <h5>Libros</h5>
+            <a href="{{ url_for('libros.listar') }}" class="btn btn-outline-primary btn-sm">Gestionar</a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <h5>Reportes</h5>
+            <a href="{{ url_for('reportes.dashboard') }}" class="btn btn-outline-primary btn-sm">Ver</a>
+        </div>
+    </div>
+</div>
+
+<div class="card p-4 border-warning">
+    <h5 class="mb-1">Ciclo diario de multas y notificaciones</h5>
+    <p class="text-muted small mb-3">
+        El sistema ejecuta esto automáticamente una vez al día al primer acceso.
+        Puedes forzarlo ahora si necesitas ver los resultados de inmediato
+        (útil para pruebas o si no hubo accesos hoy).
+    </p>
+    <form method="POST" action="{{ url_for('reportes.procesar_ciclo_manual') }}">
+        <button type="submit" class="btn btn-warning">
+            ⚙ Procesar multas y enviar notificaciones ahora
+        </button>
+    </form>
+</div>
+{% endblock %}

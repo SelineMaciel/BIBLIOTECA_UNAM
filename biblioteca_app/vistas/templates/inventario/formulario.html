@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block titulo %}{{ accion }} Inventario{% endblock %}
+{% block contenido %}
+<h2 class="mb-4">{{ accion }} Registro de Inventario</h2>
+<div class="card p-4">
+    <form method="POST" novalidate>
+        {{ formulario.hidden_tag() }}
+        <div class="row g-3">
+            <div class="col-md-6">
+                {{ formulario.isbn.label(class="form-label") }}
+                {{ formulario.isbn(class="form-select") }}
+            </div>
+            <div class="col-md-6">
+                {{ formulario.id_sucursal.label(class="form-label") }}
+                {{ formulario.id_sucursal(class="form-select") }}
+            </div>
+            <div class="col-md-6">
+                {{ formulario.cantidad_total.label(class="form-label") }}
+                {{ formulario.cantidad_total(class="form-control" + (" is-invalid" if formulario.cantidad_total.errors else "")) }}
+                {% for error in formulario.cantidad_total.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+                {{ formulario.cantidad_disponible.label(class="form-label") }}
+                {{ formulario.cantidad_disponible(class="form-control" + (" is-invalid" if formulario.cantidad_disponible.errors else "")) }}
+                {% for error in formulario.cantidad_disponible.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+        </div>
+        <div class="mt-4">
+            {{ formulario.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('inventario.listar') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
